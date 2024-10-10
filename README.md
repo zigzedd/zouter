@@ -3,7 +3,7 @@
 </h1>
 
 <h4 align="center">
-	<a href="https://code.zeptotech.net/Zedd/Zouter">Documentation</a>
+	<a href="https://code.zeptotech.net/zedd/zouter">Documentation</a>
 |
 	<a href="https://zedd.zeptotech.net/zouter/api">API</a>
 </h4>
@@ -11,6 +11,8 @@
 <p align="center">
 	Zig HTTP router library
 </p>
+
+Zouter is part of [_zedd_](https://code.zeptotech.net/zedd), a collection of useful libraries for zig.
 
 ## Zouter for zap
 
