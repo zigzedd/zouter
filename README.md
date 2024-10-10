@@ -45,7 +45,7 @@ exe.root_module.addImport("zouter", zdotenv.module("zouter"));
 
 ### Example
 
-Here is a quick example of how to set up a router. It is an extract from the full test code at [`example.zig`](https://code.zeptotech.net/zedd/zouter/src/branch/main/tests/example.zig).
+Here is a quick example of how to set up a router. It is an extract from the full test code at [`example.zig`](https://code.zeptotech.net/zedd/zouter/src/branch/main/tests/example.zig). You may want to have a look to [`simple_routes.zig`](https://code.zeptotech.net/zedd/zouter/src/branch/main/tests/simple_routes.zig) which shows more advanced features.
 
 ```zig
 /// GET /foo/:arg/bar request handler.
