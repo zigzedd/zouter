@@ -24,6 +24,25 @@ Zouter 0.1.0 is made for zig 0.13.0 and tested with zap 0.8.0.
 
 ## How to use
 
+### Install
+
+In your project directory:
+
+```shell
+$ zig fetch --save https://code.zeptotech.net/zedd/zouter/archive/v0.1.0.tar.gz
+```
+
+In `build.zig`:
+
+```zig
+// Add zouter dependency.
+const zouter = b.dependency("zouter", .{
+	.target = target,
+	.optimize = optimize,
+});
+exe.root_module.addImport("zouter", zdotenv.module("zouter"));
+```
+
 ### Example
 
 Here is a quick example of how to set up a router. It is an extract from the full test code at [`example.zig`](https://code.zeptotech.net/zedd/zouter/src/branch/main/tests/example.zig).
