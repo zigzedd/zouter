@@ -1,3 +1,11 @@
+<p align="center">
+	<a href="https://code.zeptotech.net/zedd/zouter">
+		<picture>
+			<img alt="Zouter logo" width="150" src="https://code.zeptotech.net/zedd/zouter/raw/branch/main/logo.svg" />
+		</picture>
+	</a>
+</p>
+
 <h1 align="center">
 	Zouter
 </h1>
