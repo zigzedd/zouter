@@ -48,7 +48,7 @@ const zouter = b.dependency("zouter", .{
 	.target = target,
 	.optimize = optimize,
 });
-exe.root_module.addImport("zouter", zdotenv.module("zouter"));
+exe.root_module.addImport("zouter", zouter.module("zouter"));
 ```
 
 ### Example
