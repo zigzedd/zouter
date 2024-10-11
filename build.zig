@@ -26,13 +26,21 @@ pub fn build(b: *std.Build) void {
 		.optimize = optimize,
 	});
 
-	// Add zap dependency.
-	lib.root_module.addImport("zap", zap.module("zap"));
-
 	// This declares intent for the library to be installed into the standard
 	// location when the user invokes the "install" step (the default step when
 	// running `zig build`).
 	b.installArtifact(lib);
+
+	// Add zouter module.
+	const zouter_module = b.addModule("zouter", .{
+		.root_source_file = b.path("src/root.zig"),
+		.target = target,
+		.optimize = optimize,
+	});
+
+	// Add zap dependency.
+	lib.root_module.addImport("zap", zap.module("zap"));
+	zouter_module.addImport("zap", zap.module("zap"));
 
 	// Creates a step for unit testing. This only builds the test executable
 	// but does not run it.
@@ -45,7 +53,7 @@ pub fn build(b: *std.Build) void {
 	// Add zap dependency.
 	lib_unit_tests.root_module.addImport("zap", zap.module("zap"));
 	// Add zouter dependency.
-	lib_unit_tests.root_module.addImport("zouter", &lib.root_module);
+	lib_unit_tests.root_module.addImport("zouter", zouter_module);
 
 	const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
 
