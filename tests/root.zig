@@ -1,5 +1,5 @@
 const std = @import("std");
-const zouter = @import("../src/root.zig");
+const zouter = @import("zouter");
 
 test {
 //	try std.testing.refAllDecls(zouter);

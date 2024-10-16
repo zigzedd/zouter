@@ -1,4 +1,3 @@
-const std = @import("std");
 const router = @import("router.zig");
 const route = @import("route.zig");
 
