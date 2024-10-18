@@ -195,6 +195,8 @@ pub const RouteNode = struct {
 					.handle = definition.handle,
 					.handleNotFound = definition.handleNotFound,
 					.handleError = definition.handleError,
+					.preHandle = definition.preHandle,
+					.postHandle = definition.postHandle,
 				});
 			}
 		else
@@ -203,6 +205,8 @@ pub const RouteNode = struct {
 				childTree.handle = definition.handle;
 				childTree.handleNotFound = definition.handleNotFound;
 				childTree.handleError = definition.handleError;
+				childTree.preHandle = definition.preHandle;
+				childTree.postHandle = definition.postHandle;
 
 				if (definition.children) |children|
 					{ // If there are children, recursively parse them.
