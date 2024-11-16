@@ -28,7 +28,7 @@ _Zouter_ is an HTTP router library for Zig **zap** HTTP server. It's made to eas
 
 ## Versions
 
-Zouter 0.1.1 is made for zig 0.13.0 and tested with zap 0.8.0.
+Zouter 0.1.2 is made for zig 0.13.0 and tested with zap 0.9.1.
 
 ## How to use
 
@@ -37,7 +37,7 @@ Zouter 0.1.1 is made for zig 0.13.0 and tested with zap 0.8.0.
 In your project directory:
 
 ```shell
-$ zig fetch --save https://code.zeptotech.net/zedd/zouter/archive/v0.1.1.tar.gz
+$ zig fetch --save https://code.zeptotech.net/zedd/zouter/archive/v0.1.2.tar.gz
 ```
 
 In `build.zig`:
