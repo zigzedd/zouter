@@ -22,10 +22,12 @@ pub fn build(b: *std.Build) void {
 
 	// Add unit tests.
 	const lib_unit_tests = b.addTest(.{
-		.root_module = lib_mod,
+		.root_source_file = b.path("tests/root.zig"),
 		.target = target,
 		.optimize = optimize,
 	});
+	lib_unit_tests.root_module.addImport("zap", zap.module("zap"));
+	lib_unit_tests.root_module.addImport("zouter", lib_mod);
 	const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
 
 	const test_step = b.step("test", "Run unit tests.");
