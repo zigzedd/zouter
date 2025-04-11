@@ -1,7 +1,9 @@
 .{
-	.name = "zouter",
-	.version = "0.1.2",
-	.minimum_zig_version = "0.13.0",
+	.name = .zouter,
+	.version = "0.2.0",
+	.minimum_zig_version = "0.14.0",
+
+	.fingerprint = 0xa981704810c376a0,
 
 	.dependencies = .{
 		.zap = .{
