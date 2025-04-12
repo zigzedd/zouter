@@ -127,11 +127,10 @@ fn runHttp() !void {
 	var listener = zap.HttpListener.init(.{
 		.interface = "127.0.0.1",
 		.port = 8112,
-		.log = false,
+		.log = true,
 		// Add zouter to the listener.
 		.on_request = zouter.Router.onRequest,
 	});
-	zap.enableDebugLog();
 	try listener.listen();
 
 	const notFoundThread = try makeRequestThread(allocator, std.http.Method.GET, "http://127.0.0.1:8112/notfound/query", &notFoundResponse);

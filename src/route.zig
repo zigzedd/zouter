@@ -28,8 +28,16 @@ pub const RoutingResult = struct {
 		// Move bytes from the end to the beginning of the buffer.
 		std.mem.copyForwards(u8, buffer[0..(decodedValue.len)], buffer[(buffer.len - decodedValue.len)..]);
 		// Resize the buffer to free remaining bytes.
-		_ = self.allocator.resize(buffer, decodedValue.len);
-		buffer = buffer[0..decodedValue.len];
+		if (self.allocator.resize(buffer, decodedValue.len))
+		{ // The buffer could have been resized, change variable length.
+			buffer = buffer[0..decodedValue.len];
+		}
+		else
+		{ // Could not resize the buffer, allocate a new one and free the old one.
+			const originalBuffer = buffer;
+			defer self.allocator.free(originalBuffer);
+			buffer = try self.allocator.dupe(u8, originalBuffer[0..decodedValue.len]);
+		}
 
 		// Add value to params.
 		try self.params.put(try self.allocator.dupe(u8, key), buffer);
@@ -219,17 +227,17 @@ pub const RouteNode = struct {
 	}
 
 	/// Get request handler depending on the request method.
-	pub fn getMethodHandler(self: Self, requestMethod: zap.Method) ?router.RouteHandler
+	pub fn getMethodHandler(self: Self, requestMethod: zap.http.Method) ?router.RouteHandler
 	{
 		if (self.handle) |handle|
 		{ // A handle object is defined, getting the right handler from it.
 			return switch (requestMethod)
 			{ // Return the defined request handler from the request method.
-				zap.Method.GET => handle.get orelse handle.any,
-				zap.Method.POST => handle.post orelse handle.any,
-				zap.Method.PATCH => handle.patch orelse handle.any,
-				zap.Method.PUT => handle.put orelse handle.any,
-				zap.Method.DELETE => handle.delete orelse handle.any,
+				zap.http.Method.GET => handle.get orelse handle.any,
+				zap.http.Method.POST => handle.post orelse handle.any,
+				zap.http.Method.PATCH => handle.patch orelse handle.any,
+				zap.http.Method.PUT => handle.put orelse handle.any,
+				zap.http.Method.DELETE => handle.delete orelse handle.any,
 				else => handle.any,
 			};
 		}
@@ -272,7 +280,7 @@ pub const RouteNode = struct {
 
 	/// Try to find a matching handler in the current route for the given path.
 	/// Return true when a route is matching the request correctly.
-	pub fn match(self: *Self, requestMethod: zap.Method, path: *std.mem.SplitIterator(u8, std.mem.DelimiterType.scalar), result: *RoutingResult) !bool
+	pub fn match(self: *Self, requestMethod: zap.http.Method, path: *std.mem.SplitIterator(u8, std.mem.DelimiterType.scalar), result: *RoutingResult) !bool
 	{
 		// Add pre, post, error and not found handlers, if defined.
 		try self.addHandlers(result);
@@ -280,9 +288,9 @@ pub const RouteNode = struct {
 		if (path.next()) |nextPath|
 			{ // Trying to follow the path by finding a matching children.
 				if (self.staticChildren.get(nextPath)) |child|
-					{ // There is a matching static child, continue to match the path on it.
-						return try child.match(requestMethod, path, result);
-					}
+				{ // There is a matching static child, continue to match the path on it.
+					return try child.match(requestMethod, path, result);
+				}
 
 				const currentIndex = path.index;
 				// No matching static child, trying dynamic children.

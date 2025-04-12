@@ -99,7 +99,7 @@ pub const Router = struct {
 		var errorHandlersIterator = std.mem.reverseIterator(routingResult.errorHandlers.items);
 		while (errorHandlersIterator.next()) |errorHandler|
 		{ // For each error handler, try to run it with the given error.
-			errorHandler(.{
+			errorHandler(MatchedRoute{
 				.route = routingResult.route,
 				.params = routingResult.params,
 			}, request, err) catch {
@@ -121,12 +121,12 @@ pub const Router = struct {
 			self.root.handleError.?(.{}, request, err) catch {};
 			return;
 		};
+		defer routingResult.deinit();
 		// Matching the requested route. Put the result in routingResult pointer.
 		_ = self.root.match(request.methodAsEnum(), &path, routingResult) catch |err| {
 			Self.handleError(request, err, routingResult);
 			return;
 		};
-		defer routingResult.deinit();
 
 		// Try to run matched route handling.
 		Self.runMatchedRouteHandling(routingResult, request)
@@ -138,7 +138,7 @@ pub const Router = struct {
 	fn runMatchedRouteHandling(routingResult: *routeManager.RoutingResult, request: zap.Request) !void
 	{
 		// Initialized route data passed to handlers from the routing result.
-		const routeData = .{
+		const routeData = MatchedRoute{
 			.route = routingResult.route,
 			.params = routingResult.params,
 		};
@@ -165,7 +165,7 @@ pub const Router = struct {
 	}
 
 	/// The on_request function of the HTTP listener.
-	pub fn onRequest(request: zap.Request) void
+	pub fn onRequest(request: zap.Request) anyerror!void
 	{
 		// Call handle of the current router instance.
 		routerInstance.handle(request);
@@ -182,7 +182,7 @@ fn impossible(_: MatchedRoute, _: zap.Request) !void
 fn defaultNotFoundHandler(_: MatchedRoute, request: zap.Request) !void
 {
 	try request.setContentType(zap.ContentType.TEXT);
-	request.setStatus(zap.StatusCode.not_found);
+	request.setStatus(zap.http.StatusCode.not_found);
 	try request.sendBody("404: Not Found");
 }
 
@@ -190,6 +190,6 @@ fn defaultNotFoundHandler(_: MatchedRoute, request: zap.Request) !void
 fn defaultErrorHandler(_: MatchedRoute, request: zap.Request, _: anyerror) !void
 {
 	try request.setContentType(zap.ContentType.TEXT);
-	request.setStatus(zap.StatusCode.internal_server_error);
+	request.setStatus(zap.http.StatusCode.internal_server_error);
 	try request.sendBody("500: Internal Server Error");
 }
