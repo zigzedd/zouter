@@ -11,7 +11,7 @@ pub fn build(b: *std.Build) void {
 		.openssl = false,
 	});
 
-	const lib_mod = b.createModule(.{
+	const lib_mod = b.addModule("zouter", .{
 		.root_source_file = b.path("src/root.zig"),
 		.target = target,
 		.optimize = optimize,
