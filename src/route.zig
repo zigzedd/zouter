@@ -50,18 +50,6 @@ pub const RoutingResult = struct {
 		try self.params.put(try self.allocator.dupe(u8, key), try self.allocator.dupe(u8, value));
 	}
 
-	/// Clone the given result to a new result pointer.
-	pub fn clone(self: *Self) !*Self
-	{
-		const cloned = try Self.init(self.allocator, self.route, self.handler);
-		cloned.params = try self.params.clone();
-		cloned.notFoundHandler = self.notFoundHandler;
-		cloned.preHandlers = try self.preHandlers.clone();
-		cloned.postHandlers = try self.postHandlers.clone();
-		cloned.errorHandlers = try self.errorHandlers.clone();
-		return cloned;
-	}
-
 	/// Initialize a routing result.
 	pub fn init(allocator: std.mem.Allocator, route: *RouteNode, handler: router.RouteHandler) !*Self
 	{
